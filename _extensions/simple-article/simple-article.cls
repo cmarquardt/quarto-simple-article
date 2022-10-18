@@ -5,15 +5,21 @@
 %
 % The following class options are specific to simple-article:
 %
-%    narrowmargins: use narrow margins; especially usefule for twocolumn articles.
-%    normalnumbers: use normal numbers for sectoning (default are roman numbers).
-%    lucida:        use Lucida fonts (default are TeX Gyre Pagella/Palatino; requires Lua/XeLaTeX).
-%    phfthm:        provide the phfthm theorem and proof environments.
+%    twoside:       use two-sided output.
+%    twocolumn:     use two-coloumn output; this option should be used together
+%                      should be used together with narrower margins and a
+%                      reduced fontsize.
+%    9pt, 11pt,...: font size for normal text; 9pt is useful for twocolumn
+%                      output while other font sizes supported by the extsizes
+%                      package will also work (default: 10pt)
+%    narrowmargins: use narrow margins; useful for twocolumn articles.
+%    normalnumbers: use normal numbers for sectioning (default are roman numbers).
+%    lucida:        use Lucida fonts; this requires Lua/XeLaTeX (default: Palatino
+%                      for pdfLaTeX or TeX Gyre Pagella for Lua/XeLaTeX).
+%    phfthm:        provide theorem and proof environments from the phfthm package.
 %
-% All other options are passed on the base class which is extarticle. Useful
-% ones are:
-%
-%    9pt,hidelinks,twoside,twocolumn
+% All other options are passed on the extarticle base class/extsizes package. Note
+% that the class produces A4 output
 %
 % This template is based on work available at http://www.LaTeXTemplates.com.
 %
@@ -30,7 +36,7 @@
 %----------------------------------------------------------------------------------------
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{simple-article}[2019/10/15 Simple Article LaTeX Class v2.2]
+\ProvidesClass{simple-article}[2022/10/15 Simple Article LaTeX Class v2.3]
 
 \newif\if@narrowmargins\@narrowmarginsfalse
 \DeclareOption{narrowmargins}{\@narrowmarginstrue}
@@ -50,11 +56,10 @@
 \LoadClass[a4paper]{extarticle} % Load the primary class with set options
 
 %----------------------------------------------------------------------------------------
-%	REQUIRED PACKAGES
+%	FONTS AND TYPESETTING
 %----------------------------------------------------------------------------------------
 
-\usepackage{ifluatex}
-\usepackage{ifxetex}
+\usepackage{iftex}
 
 \newif\if@unicode\@unicodefalse
 \ifluatex\@unicodetrue\fi
@@ -68,7 +73,7 @@
    \if@phfthm
       \usepackage{phfthm}
    \fi
-   \usepackage{amsmath}
+   \usepackage{amsmath} % already standard with quarto
    \usepackage{mathtools}
 
    \usepackage{fontspec}
@@ -99,15 +104,21 @@
 \fi
 
 \linespread{1.05} % Line spacing - Palatino needs more space between lines
-\ifluatex\usepackage{luatexbase}\fi % Workaround for https://tex.stackexchange.com/questions/476740/microtype-error-with-lualatex-attempt-to-call-field-warning-a-nil-value
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
 
-\usepackage[UKenglish]{babel} % Language hyphenation and typographical rules
+%----------------------------------------------------------------------------------------
+%	FURTHER PACKAGES
+%----------------------------------------------------------------------------------------
+
+\usepackage[british]{babel} % Language hyphenation and typographical rules
 \usepackage[en-GB]{datetime2}
 %\DTMlangsetup[en-GB]{ord=raise,monthyearsep={,\space}}
 \DTMlangsetup[en-GB]{ord=omit}
 
-%\usepackage[a4paper,hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+%----------------------------------------------------------------------------------------
+%	PAGE LAYOUT
+%----------------------------------------------------------------------------------------
+
 \if@narrowmargins
    \usepackage[a4paper,left=2cm,right=1.5cm,top=2.5cm,bottom=2.5cm]{geometry} % Document margins
 \else
@@ -123,12 +134,36 @@
 \setlist[itemize]{noitemsep} % Make itemize lists more compact
 
 %----------------------------------------------------------------------------------------
-%	FURTHER DOCUMENT LAYOUT SPECIFICATIONS
+%	TITLE, ABSTRACT AND PAGE HEADERS/FOOTERS
 %----------------------------------------------------------------------------------------
+
+\usepackage{titling} % Customizing the title section
+
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\LARGE\bfseries} % Article title formatting
+\posttitle{\end{center}\vskip 1em} % Article title closing formatting
+\preauthor{\begin{center}
+           \large \lineskip 0.5em%
+           \begin{tabular}[t]{c}}
+\postauthor{\end{tabular}\par\end{center}\vskip 0.75em}
+\predate{\begin{center}\large}
+\postdate{\par\end{center}\vskip 1em}
 
 \usepackage{abstract} % Allows abstract customization
 \renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
 \renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+\setlength{\abstitleskip}{0.5em}
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+%----------------------------------------------------------------------------------------
+%	SECTION HEADINGS
+%----------------------------------------------------------------------------------------
 
 \usepackage{titlesec} % Allows customization of titles
 \if@normalnumbers
@@ -154,29 +189,21 @@
 \titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
 \titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
 
-\usepackage{fancyhdr} % Headers and footers
-\pagestyle{fancy} % All pages have headers and footers
-\fancyhead{} % Blank out the default header
-\fancyfoot{} % Blank out the default footer
-\fancyfoot[RO,LE]{\thepage} % Custom footer text
-
-\usepackage{titling} % Customizing the title section
+%----------------------------------------------------------------------------------------
+%	HYPERREF SETUP
+%----------------------------------------------------------------------------------------
 
 \usepackage[usenames,dvipsnames]{xcolor}
-\definecolor{color1}{RGB}{0,0,90} % Color for links and references
-\definecolor{color2}{RGB}{0,20,20} % Color for urls
 
 \usepackage{hyperref} % For hyperlinks in the PDF
-\hypersetup{hidelinks,colorlinks,breaklinks=true,urlcolor=color2,citecolor=color1,linkcolor=color1,bookmarksopen=false,pdftitle={Title},pdfauthor={Author}}
-
-%----------------------------------------------------------------------------------------
-%	TITLE SECTION
-%----------------------------------------------------------------------------------------
-
-\setlength{\droptitle}{-4\baselineskip} % Move the title up
-
-\pretitle{\begin{center}\huge\bfseries} % Article title formatting
-\posttitle{\end{center}} % Article title closing formatting
+\hypersetup{hidelinks,
+            colorlinks,
+            breaklinks=true,
+            linkcolor=Blue,
+            filecolor=Blue,
+            citecolor=Blue,
+            urlcolor=Maroon,
+            bookmarksopen=false}
 
 %----------------------------------------------------------------------------------------
 

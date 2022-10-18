@@ -1,46 +1,42 @@
-title: Article Format Template
-author: Christophe Dervieux
+title: Simple Article Format Template
+author: Christian Marquardt
 version: 0.1.0
 contributes:
   formats:
     common:
-      # define below YAML configuration common to all formats
       filters:
-        # You can include here Lua filters from your extension format 
         - color-text.lua
       shortcodes:
-        # You can include here Lua filters defining shortcodes from your extension
         - shortcodes.lua
       knitr:
         opts_chunk:
           echo: false
     pdf:
-      # define default configuration for the pdf version of your format
-      documentclass: aft
+      pdf-engine: lualatex
+      documentclass: simple-article
+      number-sections: true
       colorlinks: true
-      urlcolor: red
+      urlcolor: Maroon
+      linkcolor: Blue
+      citecolor: Blue
+      filecolor: Blue
       fig-width: 6.5
       fig-height: 4.5
-      # This format use a bst file with natbib
-      biblio-style: te
       cite-method: natbib
-      # Set this below (`biblio-config: false`) if your cls already load a bst file
-      # biblio-config: false
-      # Content to add in header that your format is using
+      biblio-style: simple-article
       header-includes: |
         \usepackage{orcidlink}
         \definecolor{mypink}{RGB}{219, 48, 122}
+      template: simple-article.tex
       template-partials:
-        # Add here the partials your format is using
+        - "partials/before-body.tex"
         - "partials/title.tex"
         - "partials/_authors.tex"
       format-resources:
-        # Add here the resources required for the PDF rendering
-        - aft.cls
-        - te.bst
+        - simple-article.cls
+        - simple-article.bst
     html:
-      # define default configuration for the html version of your format
-      number-sections: true
+      number-sections: false
       toc: true
       theme: custom.scss
       # Use a CSL file to style (https://www.zotero.org/styles/)

@@ -19,4 +19,23 @@ $if(subtitle)$
 \subtitle{$subtitle$}
 $endif$
 \author{${ by-author:_authors.tex()[\and ] }}
+
 \date{$date$}
+
+$if(shorttitle)$
+$if(shortauthor)$
+\fancyhead[C]{${shortauthor} $$\bullet$$ ${shorttitle}}
+$else$ $-- no shortauthor
+$for(by-author/first)$
+\fancyhead[C]{${it.name.literal} $$\bullet$$ ${shorttitle}}
+$endfor$
+$endif$
+$else$ $-- no shorttitle
+$if(shortauthor)$
+\fancyhead[C]{${shortauthor} $$\bullet$$ ${title}}
+$else$ $-- no shortauthor
+$for(by-author/first)$
+\fancyhead[C]{${it.name.literal} $$\bullet$$ ${title}}
+$endfor$
+$endif$
+$endif$
