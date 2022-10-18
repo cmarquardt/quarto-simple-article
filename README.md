@@ -66,4 +66,14 @@ format:
 ```
 ## Limitations
 
-Support for LaTeX tables is currently broken in the two-column output.
+In two-column mode, markdown tables are not supported. The reason is that Quarto (at least at the time of writing these notes in v1.2.x) uses the `longtable` environment to typeset tables which is incompatible with the `twocolumn` option to LaTeX classes. Unfortunately, the use of `longtable` is currently hard coded in Quarto.
+
+A workaround - for short tables - is to use the `knitr::kable()` or `kableExtra::kbl()` table generators in R which do not rely on `longtable`. By using their `table.envir` argument (or it's abbreviated form `table.env`), even tables spanning both columns can be constructed. 
+
+The draw with this approach is that table captions and labels must be provided through the `caption` and `label` arguments of these functions; using the Quarto-typical comment-like entries in a code cell (e.g., `label:` and `tbl-cap:`) do not work as their values are not fed into the `kable` or `kbl()` calls. An example for creating a full-width table is:
+
+```{r}
+kableExtra::kbl(head(mtcars), caption = "Cars", label = "tab-cars", booktabs = TRUE, table.env = 'table*')
+```
+
+The same code without using `table.envir` will generate a single column table.

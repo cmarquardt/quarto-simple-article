@@ -54,12 +54,7 @@ Maecenas sed ultricies felis. Sed imperdiet dictum arcu a egestas.
 -   Pellentesque bibendum pretium aliquet
 
 ```{r}
-#| label: tbl-cars
-#| tbl-cap: "Cars"
-#| tbl-colwidths: [60,40]
-
-library(knitr)
-kable(head(cars), booktabs = TRUE)
+kableExtra::kbl(head(mtcars), caption = "Cars", label = "tbl-cars", booktabs = TRUE, table.env = 'table*')
 ```
 
 
