@@ -7,10 +7,43 @@ $-- Use it if you need to insert content at this specific place of the main Pand
 $-- Here we are using it to format the authors part of the template.
 $-- %%%%%%%%%%%%%%%
 
-\textsc{$it.name.literal$}$if(it.orcid)$~\orcidlink{$it.orcid$}$endif$
-$for(it.affiliations/first)$\\[1ex]
-\normalsize $it.name$
-$endfor$\\
-$if(it.email)$
-\normalsize\href{mailto:$it.email$}{$it.email$}
-$endif$
+$-- LaTeX logic for handling the number of affiliations
+\newif\ifnoAffil\noAffilfalse
+\newif\ifoneAffil\oneAffilfalse
+
+$-- LaTeX function to obtain number of affiliations
+\newcommand{\setNumAffil}[1]{%
+    \ifnum#1=0
+        \noAffiltrue
+    \else
+        \ifnum#1=1
+            \oneAffiltrue
+        \fi
+    \fi
+}
+
+\setNumAffil{$affiliations/length$}
+
+\ifnoAffil
+%% No affiliation given....
+\author{$for(by-author)$$it.name.literal$$sep$, $endfor$}
+\else
+\ifoneAffil
+%% Single affiliation given...
+$for(by-author)$
+\author{$it.name.literal$$if(it.orcid)$~\orcidlink{$it.orcid$}$endif$}
+$endfor$
+$for(by-affiliation/first)$
+\affil{$it.name$$if(it.city)$, $it.city$$endif$$if(it.country)$, $it.country$$endif$}
+$endfor$
+\else
+%% Multiple affiliations given
+$for(by-author)$
+\author[$for(it.affiliations)$$it.number$$sep$,$endfor$]{$it.name.literal$$if(it.orcid)$~\orcidlink{$it.orcid$}$endif$}
+$endfor$
+$for(by-affiliation)$
+\affil[$it.number$]{$it.name$$if(it.city)$, $it.city$$endif$$if(it.country)$, $it.country$$endif$}
+$endfor$
+\fi
+\fi
+

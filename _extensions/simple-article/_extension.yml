@@ -1,6 +1,6 @@
 title: Simple Article Format Template
 author: Christian Marquardt
-version: 0.1.0
+version: 0.2.0
 contributes:
   formats:
     common:
@@ -25,6 +25,7 @@ contributes:
       cite-method: natbib
       biblio-style: simple-article
       header-includes: |
+        \usepackage{authblk}
         \usepackage{orcidlink}
         \definecolor{mypink}{RGB}{219, 48, 122}
       template: simple-article.tex
