@@ -40,3 +40,9 @@ $for(by-author/first)$
 $endfor$
 $endif$
 $endif$
+
+$if(document-id)$
+\fancyfoot{} % Blank out the default footer
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+\fancyfoot[LO,RE]{\small{}$document-id$}
+$endif$

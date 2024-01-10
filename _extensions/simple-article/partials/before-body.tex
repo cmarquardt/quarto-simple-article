@@ -11,6 +11,10 @@ $if(abstract)$
 \renewcommand{\maketitlehookd}{%
 \begin{abstract}
 \noindent{}$abstract$
+$if(document-id)$
+\\[1em]
+\emph{\small{}\textbf{Document-ID:} $document-id$}
+$endif$
 \end{abstract}
 }
 $endif$
